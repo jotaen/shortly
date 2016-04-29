@@ -8,12 +8,14 @@ const validator = require('./validator')
 const protector = require('./protector')
 const redirector = require('./redirector')
 const auth = require('../auth')
-const handle = require('./handleError')
+const errors = require('./errors')
+const errorHandler = require('./errorHandler')
 
 module.exports = (server, credentials, shortlinks) => {
   const admin = auth(credentials.username, credentials.password)
 
   server.use(bodyParser.json())
+  server.use(errorHandler)
 
   server.get('/', redirector('/', 'http://jotaen.net'), protector(admin), (req, res) => {
     shortlinks.list().then((result) => {
@@ -32,11 +34,9 @@ module.exports = (server, credentials, shortlinks) => {
           .header('Location', data.url)
           .send(data)
       } else {
-        handle.notFound(res)
+        res.sendError(errors.notFound)
       }
-    }).catch(() => {
-      handle.internalError(res)
-    })
+    }).catch(() => res.sendError(errors.internal))
   })
 
   server.put('/:token', protector(admin), validator(request.shortlink), (req, res) => {
@@ -47,10 +47,9 @@ module.exports = (server, credentials, shortlinks) => {
       res
         .status(201)
         .send(shortlink)
-    }).catch((error) => {
-      if (error.message === 'ALREADY_EXISTS') handle.methodNotAllowed(res)
-      else handle.internalError(res)
-    })
+    }).catch((e) => res.sendError(
+      e.message === 'ALREADY_EXISTS' ? errors.methodNotAllowed('GET, POST, DELETE') : errors.internal
+    ))
   })
 
   server.post('/', protector(admin), validator(request.shortlink), (req, res) => {
@@ -64,9 +63,7 @@ module.exports = (server, credentials, shortlinks) => {
       res
         .status(201)
         .send(shortlink)
-    }).catch(() => {
-      handle.internalError(res)
-    })
+    }).catch(() => res.sendError(errors.internal))
   })
 
   server.post('/:token', protector(admin), validator(request.shortlink), (req, res) => {
@@ -81,11 +78,9 @@ module.exports = (server, credentials, shortlinks) => {
           .status(200)
           .send(shortlink)
       } else {
-        handle.notFound(res)
+        res.sendError(errors.notFound)
       }
-    }).catch(() => {
-      handle.internalError(res)
-    })
+    }).catch(() => res.sendError(errors.internal))
   })
 
   server.delete('/:token', protector(admin), (req, res) => {
@@ -96,10 +91,8 @@ module.exports = (server, credentials, shortlinks) => {
           .status(200)
           .send(shortlink)
       } else {
-        handle.notFound(res)
+        res.sendError(errors.notFound)
       }
-    }).catch(() => {
-      handle.internalError(res)
-    })
+    }).catch(() => res.sendError(errors.internal))
   })
 }

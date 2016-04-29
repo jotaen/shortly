@@ -48,7 +48,7 @@ module.exports = (server, credentials, shortlinks) => {
         .status(201)
         .send(shortlink)
     }).catch((e) => res.sendError(
-      e.message === 'ALREADY_EXISTS' ? errors.methodNotAllowed : errors.internal
+      e.message === 'ALREADY_EXISTS' ? errors.methodNotAllowed('GET, POST, DELETE') : errors.internal
     ))
   })
 

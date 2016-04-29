@@ -8,10 +8,10 @@ exports.notFound = {
   status: 404,
   message: 'Error: resource not found'
 },
-exports.methodNotAllowed = {
+exports.methodNotAllowed = (methods) => ({
   status: '405',
   message: 'Error: method not allowed',
   headers: {
-    'Allow': 'GET, POST, DELETE'
+    'Allow': methods
   }
-}
+})

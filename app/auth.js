@@ -1,17 +1,8 @@
 'use strict'
 
-const match = (login, secret) => {
-  if (!login) return false
-  if (login.name === secret.username && login.pass === secret.password) return true
-  return false
-}
+const match = (login, secret) => (typeof login === 'object' && login.name === secret.username && login.pass === secret.password)
 
-module.exports = (username, password) => {
-  const secret = {
-    username: username,
-    password: password
-  }
-  return (login) => {
-    return match(login, secret)
-  }
-}
+module.exports = (username, password) => (login) => match(login, {
+  username: username,
+  password: password
+})

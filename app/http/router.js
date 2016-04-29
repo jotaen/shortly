@@ -34,9 +34,7 @@ module.exports = (server, credentials, shortlinks) => {
       } else {
         handle.notFound(res)
       }
-    }).catch(() => {
-      handle.internalError(res)
-    })
+    }).catch(() => handle.internalError(res))
   })
 
   server.put('/:token', protector(admin), validator(request.shortlink), (req, res) => {
@@ -64,9 +62,7 @@ module.exports = (server, credentials, shortlinks) => {
       res
         .status(201)
         .send(shortlink)
-    }).catch(() => {
-      handle.internalError(res)
-    })
+    }).catch(() => handle.internalError(res))
   })
 
   server.post('/:token', protector(admin), validator(request.shortlink), (req, res) => {
@@ -83,9 +79,7 @@ module.exports = (server, credentials, shortlinks) => {
       } else {
         handle.notFound(res)
       }
-    }).catch(() => {
-      handle.internalError(res)
-    })
+    }).catch(() => handle.internalError(res))
   })
 
   server.delete('/:token', protector(admin), (req, res) => {
@@ -98,8 +92,6 @@ module.exports = (server, credentials, shortlinks) => {
       } else {
         handle.notFound(res)
       }
-    }).catch(() => {
-      handle.internalError(res)
-    })
+    }).catch(() => handle.internalError(res))
   })
 }

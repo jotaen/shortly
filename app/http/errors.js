@@ -15,3 +15,8 @@ exports.methodNotAllowed = (methods) => ({
     'Allow': methods
   }
 })
+exports.unprocessableEntity = (details) => ({
+  status: 422,
+  message: 'Error – the request parameters could not be validated.',
+  errors: details
+})

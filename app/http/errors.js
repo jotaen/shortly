@@ -9,7 +9,7 @@ exports.notFound = {
   message: 'Error: resource not found'
 },
 exports.methodNotAllowed = (methods) => ({
-  status: '405',
+  status: 405,
   message: 'Error: method not allowed',
   headers: {
     'Allow': methods

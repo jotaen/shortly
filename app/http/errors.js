@@ -10,7 +10,7 @@ exports.notFound = {
 }
 exports.unauthorized = {
   status: 401,
-  message: 'Error – you are not authorized',
+  message: 'Error – you are not authorized'
 }
 exports.methodNotAllowed = (methods) => ({
   status: 405,
